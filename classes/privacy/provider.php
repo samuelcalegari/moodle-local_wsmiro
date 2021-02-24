@@ -15,15 +15,34 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Privacy Subsystem implementation for local_wsmiro.
+ *
  * @package    local_wsmiro
  * @copyright  2020 - 2021 Université de Perpignan (https://www.univ-perp.fr)
  * @author     Samuel Calegari <samuel.calegari@univ-perp.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$plugin->version  = 2017120800;
-$plugin->requires = 2016051900;
-$plugin->component = 'local_wsmiro';
-$plugin->cron     = 0;
-$plugin->release = '1.0 (Build: 2017120800)';
-$plugin->maturity = MATURITY_STABLE;
+namespace local_wsmiro\privacy;
+
+defined('MOODLE_INTERNAL') || die();
+
+/**
+ * Privacy Subsystem for local_wsmiro implementing null_provider.
+ *
+ * @copyright  2020 - 2021 Université de Perpignan (https://www.univ-perp.fr)
+ * @author     Samuel Calegari <samuel.calegari@univ-perp.fr>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+class provider implements \core_privacy\local\metadata\null_provider {
+
+    /**
+     * Get the language string identifier with the component's language
+     * file to explain why this plugin stores no data.
+     *
+     * @return  string
+     */
+    public static function get_reason() : string {
+        return 'privacy:metadata';
+    }
+}

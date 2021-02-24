@@ -15,10 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Web service local plugin
- *
- * @package    localwsmiro
- * @copyright  2017 Samuel Calegari
+ * @package    local_wsmiro
+ * @copyright  2020 - 2021 Université de Perpignan (https://www.univ-perp.fr)
+ * @author     Samuel Calegari <samuel.calegari@univ-perp.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 

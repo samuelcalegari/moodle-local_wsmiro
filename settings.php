@@ -15,10 +15,10 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * @package   local_wsmiro
- * @copyright 2020 Moodle Pty Ltd (http://moodle.com)
- * @author    Samuel Calegari
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    local_wsmiro
+ * @copyright  2020 - 2021 Université de Perpignan (https://www.univ-perp.fr)
+ * @author     Samuel Calegari <samuel.calegari@univ-perp.fr>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
