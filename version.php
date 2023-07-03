@@ -16,14 +16,14 @@
 
 /**
  * @package    local_wsmiro
- * @copyright  2020 - 2021 Université de Perpignan (https://www.univ-perp.fr)
+ * @copyright  2020 - 2023 Université de Perpignan (https://www.univ-perp.fr)
  * @author     Samuel Calegari <samuel.calegari@univ-perp.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$plugin->version  = 2017120800;
+$plugin->version  = 2023070300;
 $plugin->requires = 2016051900;
 $plugin->component = 'local_wsmiro';
 $plugin->cron     = 0;
-$plugin->release = '1.0 (Build: 2017120800)';
+$plugin->release = '2.0 (Build: 2023061400)';
 $plugin->maturity = MATURITY_STABLE;

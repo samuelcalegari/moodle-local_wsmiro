@@ -16,7 +16,7 @@
 
 /**
  * @package    local_wsmiro
- * @copyright  2020 - 2021 Université de Perpignan (https://www.univ-perp.fr)
+ * @copyright  2020 - 2023 Université de Perpignan (https://www.univ-perp.fr)
  * @author     Samuel Calegari <samuel.calegari@univ-perp.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -40,11 +40,24 @@ class local_wsmiro_external extends external_api {
         );
     }
 
+    public static function get_course_logs_parameters() {
+        return new external_function_parameters(
+            array(  'cid' => new external_value(PARAM_INT, 'Course ID"',VALUE_REQUIRED),
+                'start' => new external_value(PARAM_INT, 'Staring Time (seconds until 1970)"',VALUE_REQUIRED),
+                'end' => new external_value(PARAM_INT, 'Staring Time (seconds until 1970)"',VALUE_REQUIRED)
+            )
+        );
+    }
+
     public static function get_user_parameters() {
         return new external_function_parameters(
-            array(  'username' => new external_value(PARAM_USERNAME, 'Username"',VALUE_REQUIRED),
-                    'email' => new external_value(PARAM_EMAIL, 'Email"',VALUE_REQUIRED)
-            )
+            array('uid' => new external_value(PARAM_INT, 'User ID"',VALUE_REQUIRED))
+        );
+    }
+
+    public static function get_course_students_parameters() {
+        return new external_function_parameters(
+            array('cid' => new external_value(PARAM_INT, 'Course ID"',VALUE_REQUIRED))
         );
     }
 
@@ -77,7 +90,7 @@ class local_wsmiro_external extends external_api {
             $tmp['lastcourseaccess'] = $record->timeaccess;
         } else {
 			$tmp['lastcourse'] = "";
-			$tmp['lastcourseaccess'] = 0;			
+			$tmp['lastcourseaccess'] = 0;
 		}
 
         $result = $DB->get_records('logstore_standard_log',array('userid' => $params['uid']),'timecreated DESC','*',0,5);
@@ -93,7 +106,7 @@ class local_wsmiro_external extends external_api {
             );
         }
         $tmp['lastlogs'] = $tmp2;
-		
+
 		return $tmp;
     }
 
@@ -134,11 +147,43 @@ class local_wsmiro_external extends external_api {
         return $tmp;
     }
 
-    public static function get_user($username, $email) {
+    public static function get_course_logs($cid,$start,$end) {
+        global $USER, $DB;
+
+        //Parameter validation
+        //REQUIRED
+        $params = self::validate_parameters(self::get_course_logs_parameters(), array('cid' => $cid, 'start' => $start, 'end' => $end));
+
+        //Context validation
+        //OPTIONAL but in most web service it should present
+        $context = get_context_instance(CONTEXT_USER, $USER->id);
+        self::validate_context($context);
+
+        //Capability checking
+        //OPTIONAL but in most web service it should present
+        if (!has_capability('moodle/user:viewdetails', $context)) {
+            throw new moodle_exception('cannotviewprofile');
+        }
+
+        $select = 'courseid = ' . $params['cid'] . ' AND timecreated >= ' . $params['start'] . ' AND timecreated <= ' . $params['end'];
+        $result = $DB->get_records_select('logstore_standard_log', $select,null, 'timecreated ASC');
+        $tmp = array();
+        foreach($result as $record){
+            array_push($tmp, array(
+                    'eventname' => $record->eventname,
+                    'userid' => $record->userid,
+                    'date' => $record->timecreated)
+            );
+        }
+
+        return $tmp;
+    }
+
+    public static function get_user($uid) {
         global $USER;
         global $DB;
 
-        $params = self::validate_parameters(self::get_user_parameters(), array('username' => $username, 'email' => $email));
+        $params = self::validate_parameters(self::get_user_parameters(), array('uid' => $uid));
 
         $context = get_context_instance(CONTEXT_USER, $USER->id);
         self::validate_context($context);
@@ -147,11 +192,47 @@ class local_wsmiro_external extends external_api {
             throw new moodle_exception('cannotviewprofile');
         }
 
-        $result = $DB->get_record('user',array('username' => $params['username'], 'email' => $params['email']));
+        $result = $DB->get_record('user',array('id' => $params['uid']));
         $tmp = array();
         $tmp['uid'] = $result->id;
         $tmp['lastname'] = $result->lastname;
         $tmp['firstname'] = $result->firstname;
+
+        return $tmp;
+    }
+
+    public static function get_course_students($cid) {
+        global $USER, $DB;
+
+        $params = self::validate_parameters(self::get_course_students_parameters(), array('cid' => $cid));
+
+        $context = get_context_instance(CONTEXT_USER, $USER->id);
+        self::validate_context($context);
+
+        if (!has_capability('moodle/user:viewdetails', $context)) {
+            throw new moodle_exception('cannotviewprofile');
+        }
+
+        $coursecontext = context_course::instance($cid);
+        $users = get_enrolled_users($coursecontext, 'moodle/course:isincompletionreports');
+
+        $tmp = array();
+
+        foreach ($users  as $user ) {
+            global $DB;
+            $lastaccesscourse = $DB->get_field('user_lastaccess', 'timeaccess', array('courseid' => $cid, 'userid' => $user->id));
+            if (!$lastaccesscourse) $lastaccesscourse = 0;
+            array_push($tmp,
+                array('uid'=>$user->id,
+                    'firstname'=>$user->firstname,
+                    'lastname'=>$user->lastname,
+                    'email'=>$user->email,
+                    'avatar' => strval(new moodle_url('/user/pix.php/'.$user->id.'/f2.jpg')),
+                    'lastaccess' => $user->lastaccess,
+                    'lastaccesscourse' => $lastaccesscourse
+                )
+            );
+        }
 
         return $tmp;
     }
@@ -171,6 +252,56 @@ class local_wsmiro_external extends external_api {
     public static function get_logs_returns() {
 
         return new external_multiple_structure(self::log_structure());
+    }
+
+    public static function log_structure() {
+
+        return new external_single_structure(
+            array(
+                'eventname' => new external_value(PARAM_TEXT, 'Event name'),
+                'courseid' => new external_value(PARAM_INT, 'Course ID'),
+                'course' => new external_value(PARAM_TEXT, 'Course name'),
+                'date' => new external_value(PARAM_INT, 'Datetime'),
+                'origin' => new external_value(PARAM_TEXT, 'Origin'),
+                'ip' => new external_value(PARAM_TEXT, 'IP Address')
+            )
+        );
+    }
+
+    public static function get_course_logs_returns() {
+
+        return new external_multiple_structure(self::course_log_structure());
+    }
+
+    public static function course_log_structure() {
+
+        return new external_single_structure(
+            array(
+                'eventname' => new external_value(PARAM_TEXT, 'Event name'),
+                'userid' => new external_value(PARAM_INT, 'User ID'),
+                'date' => new external_value(PARAM_INT, 'Datetime')
+            )
+        );
+    }
+
+    public static function get_course_students_returns() {
+
+        return new external_multiple_structure(self::course_students_structure());
+    }
+
+    public static function course_students_structure() {
+
+        return new external_single_structure(
+            array(
+                'uid' => new external_value(PARAM_INT, 'User ID'),
+                'firstname' => new external_value(PARAM_TEXT, 'Firstname'),
+                'lastname' => new external_value(PARAM_TEXT, 'Lastname'),
+                'email' => new external_value(PARAM_TEXT, 'Email'),
+                'avatar' => new external_value(PARAM_TEXT, 'Avatar'),
+                'lastaccess' => new external_value(PARAM_INT, 'Lms Last Access'),
+                'lastaccesscourse' => new external_value(PARAM_INT, 'Course Last Access'),
+            )
+        );
     }
 
     public static function get_user_returns() {
@@ -195,18 +326,5 @@ class local_wsmiro_external extends external_api {
 
         return $courses_names;
     }
-
-    public static function log_structure() {
-
-        return new external_single_structure(
-            array(
-                'eventname' => new external_value(PARAM_TEXT, 'Event name'),
-                'courseid' => new external_value(PARAM_INT, 'Course ID'),
-                'course' => new external_value(PARAM_TEXT, 'Course name'),
-                'date' => new external_value(PARAM_INT, 'Datetime'),
-                'origin' => new external_value(PARAM_TEXT, 'Origin'),
-                'ip' => new external_value(PARAM_TEXT, 'IP Address')
-            )
-        );
-    }
 }
+

@@ -1,11 +1,11 @@
-# Miro Stats Web Services for Moodle #
+# Miro labs Web Services for Moodle #
 
 ## Current version ##
 
-1.0
+2.0
 
 ## Features ##
-- Performs communication between Moodle and the Miro Stats (Third Party Module)
+- Performs communication between Moodle and the Miro Labs (Third Party Module)
 
 ## Supported languages ##
 - english
