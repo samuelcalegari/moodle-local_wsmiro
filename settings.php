@@ -23,9 +23,5 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$mstatsUrl = $CFG->wwwroot.'/mstats/';
-
-$ADMIN->add('reports', new admin_externalpage('mstats', get_string('mstats', 'local_wsmiro') . ' *', $mstatsUrl));
-
 // No report settings.
 $settings = null;

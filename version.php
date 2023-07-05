@@ -21,9 +21,9 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$plugin->version  = 2023070300;
+$plugin->version  = 2023070500;
 $plugin->requires = 2016051900;
 $plugin->component = 'local_wsmiro';
 $plugin->cron     = 0;
-$plugin->release = '2.0 (Build: 2023061400)';
+$plugin->release = '2.0 (Build: 2023070500)';
 $plugin->maturity = MATURITY_STABLE;

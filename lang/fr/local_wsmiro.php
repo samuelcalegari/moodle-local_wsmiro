@@ -22,4 +22,3 @@
  */
 
 $string['pluginname'] = 'Web service Miro';
-$string['mstats'] = 'Statistiques Mstats';
