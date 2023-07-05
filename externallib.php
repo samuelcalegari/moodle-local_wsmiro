@@ -130,7 +130,7 @@ class local_wsmiro_external extends external_api {
 
         $courses_names =  self::get_courses_names();
 
-        $select = 'userid = ' . $params['uid'] . ' AND timecreated >= ' . $params['start'] . ' AND timecreated <= ' . $params['end'];
+        $select = 'userid = ' . $params['uid'] . ' AND realuserid is NULL AND timecreated >= ' . $params['start'] . ' AND timecreated <= ' . $params['end'];
         $result = $DB->get_records_select('logstore_standard_log', $select,null, 'timecreated ASC');
         $tmp = array();
         foreach($result as $record){
@@ -165,7 +165,7 @@ class local_wsmiro_external extends external_api {
             throw new moodle_exception('cannotviewprofile');
         }
 
-        $select = 'courseid = ' . $params['cid'] . ' AND timecreated >= ' . $params['start'] . ' AND timecreated <= ' . $params['end'];
+        $select = 'courseid = ' . $params['cid'] . ' AND realuserid is NULL AND timecreated >= ' . $params['start'] . ' AND timecreated <= ' . $params['end'];
         $result = $DB->get_records_select('logstore_standard_log', $select,null, 'timecreated ASC');
         $tmp = array();
         foreach($result as $record){
