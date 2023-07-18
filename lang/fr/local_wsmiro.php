@@ -22,3 +22,7 @@
  */
 
 $string['pluginname'] = 'Web service Miro';
+$string['url'] = 'Moodle Labs Url';
+$string['configurl'] = 'Lien direct vers la plateforme Moodle Labs';
+$string['lmsid'] = 'Identifiant LMS';
+$string['configlmsid'] = 'Identifiant de ce LMS sur Moodle Labs';

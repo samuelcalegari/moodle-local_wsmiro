@@ -16,9 +16,13 @@
 
 /**
  * @package    local_wsmiro
- * @copyright  2020 - 2021 Université de Perpignan (https://www.univ-perp.fr)
+ * @copyright  2020 - 2023 Université de Perpignan (https://www.univ-perp.fr)
  * @author     Samuel Calegari <samuel.calegari@univ-perp.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 $string['pluginname'] = 'Web service Miro';
+$string['url'] = 'Moodle Labs Url';
+$string['configurl'] = 'Direct link to the Moodle Labs';
+$string['lmsid'] = 'LMS Id';
+$string['configlmsid'] = 'LMS Id on Moodle Labs';

@@ -21,18 +21,9 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-
-if ($ADMIN->fulltree) {
-
-    $settings = new admin_settingpage('local_wsmiro', get_string('pluginname', 'local_wsmiro'));
-    $ADMIN->add('localplugins', $settings);
-
-    //--- general settings -----------------------------------------------------------------------------------
-    $settings->add(new admin_setting_configtext('local_wsmiro/url', get_string('url', 'local_wsmiro'),
-        get_string('configurl', 'local_wsmiro'), '', PARAM_URL));
-
-    $settings->add(new admin_setting_configtext('local_wsmiro/lmsid', get_string('lmsid', 'local_wsmiro'),
-        get_string('configlmsid', 'local_wsmiro'), '', PARAM_INT));
-
+function local_wsmiro_myprofile_navigation(core_user\output\myprofile\tree $tree, $user, $iscurrentuser, $course) {
+    $url = new moodle_url(get_config('local_wsmiro', 'url') . '/students/' . get_config('local_wsmiro', 'lmsid') . '/' . $user->id);
+    $string = 'Moodle Labs *';
+    $node = new core_user\output\myprofile\node('miscellaneous', 'mstats', $string, null, $url);
+    $tree->add_node($node);
 }
