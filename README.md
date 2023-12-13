@@ -1,11 +1,11 @@
-# Miro labs Web Services for Moodle #
+# Moodle Labs Web Services for Moodle #
 
 ## Current version ##
 
 2.0
 
 ## Features ##
-- Performs communication between Moodle and the Miro Labs (Third Party Module)
+- Performs communication between Moodle and the Moodle Labs (Third Party Module)
 
 ## Supported languages ##
 - english
