@@ -16,7 +16,7 @@
 
 /**
  * @package    local_wsmiro
- * @copyright  2020 - 2023 Université de Perpignan (https://www.univ-perp.fr)
+ * @copyright  2020 - 2024 Université de Perpignan (https://www.univ-perp.fr)
  * @author     Samuel Calegari <samuel.calegari@univ-perp.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -58,6 +58,15 @@ class local_wsmiro_external extends external_api {
     public static function get_course_students_parameters() {
         return new external_function_parameters(
             array('cid' => new external_value(PARAM_INT, 'Course ID"',VALUE_REQUIRED))
+        );
+    }
+
+    public static function get_zoom_logs_parameters() {
+        return new external_function_parameters(
+            array(  'uid' => new external_value(PARAM_INT, 'User ID"',VALUE_REQUIRED),
+                'start' => new external_value(PARAM_INT, 'Staring Time (seconds until 1970)"',VALUE_REQUIRED),
+                'end' => new external_value(PARAM_INT, 'Staring Time (seconds until 1970)"',VALUE_REQUIRED)
+            )
         );
     }
 
@@ -237,6 +246,37 @@ class local_wsmiro_external extends external_api {
         return $tmp;
     }
 
+    public static function get_zoom_logs($uid,$start,$end) {
+        global $USER, $DB;
+
+        //Parameter validation
+        //REQUIRED
+        $params = self::validate_parameters(self::get_zoom_logs_parameters(), array('uid' => $uid, 'start' => $start, 'end' => $end));
+
+        //Context validation
+        //OPTIONAL but in most web service it should present
+        $context = get_context_instance(CONTEXT_USER, $USER->id);
+        self::validate_context($context);
+
+        //Capability checking
+        //OPTIONAL but in most web service it should present
+        if (!has_capability('moodle/user:viewdetails', $context)) {
+            throw new moodle_exception('cannotviewprofile');
+        }
+
+        $select = 'userid = ' . $params['uid'] . ' AND join_time >= ' . $params['start'] . ' AND join_time <= ' . $params['end'];
+        $result = $DB->get_records_select('zoom_meeting_participants', $select,null, 'join_time ASC');
+        $tmp = array();
+        foreach($result as $record){
+            array_push($tmp, array(
+                    'date' => $record->join_time,
+                    'duration' => $record->duration)
+            );
+        }
+
+        return $tmp;
+    }
+
     public static function get_overview_returns() {
 
         return new external_single_structure(
@@ -300,6 +340,21 @@ class local_wsmiro_external extends external_api {
                 'avatar' => new external_value(PARAM_TEXT, 'Avatar'),
                 'lastaccess' => new external_value(PARAM_INT, 'Lms Last Access'),
                 'lastaccesscourse' => new external_value(PARAM_INT, 'Course Last Access'),
+            )
+        );
+    }
+
+    public static function get_zoom_logs_returns() {
+
+        return new external_multiple_structure(self::zoom_log_structure());
+    }
+
+    public static function zoom_log_structure() {
+
+        return new external_single_structure(
+            array(
+                'date' => new external_value(PARAM_INT, 'Datetime'),
+                'duration' => new external_value(PARAM_INT, 'Duration')
             )
         );
     }

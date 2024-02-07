@@ -16,7 +16,7 @@
 
 /**
  * @package    local_wsmiro
- * @copyright  2020 - 2023 Université de Perpignan (https://www.univ-perp.fr)
+ * @copyright  2020 - 2024 Université de Perpignan (https://www.univ-perp.fr)
  * @author     Samuel Calegari <samuel.calegari@univ-perp.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -58,6 +58,13 @@ $functions = array(
         'description' => 'Return students from a course',
         'type' => 'read',
     ),
+    'local_wsmiro_get_zoom_logs' => array(
+        'classname' => 'local_wsmiro_external',
+        'methodname' => 'get_zoom_logs',
+        'classpath' => 'local/wsmiro/externallib.php',
+        'description' => 'Return Zoom Logs from a specific user',
+        'type' => 'read',
+    ),
 );
 
 // We define the services to install as pre-build services. A pre-build service is not editable by administrator.
@@ -69,7 +76,8 @@ $services = array(
             'local_wsmiro_get_course_logs',
             'local_wsmiro_get_user',
             'local_wsmiro_get_course_students',
-            'core_enrol_get_enrolled_users'
+            'local_wsmiro_get_zoom_logs',
+            'core_enrol_get_enrolled_users',
         ),
         'restrictedusers' => 0,
         'enabled' => 1,

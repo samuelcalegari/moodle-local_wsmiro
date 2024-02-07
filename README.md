@@ -1,6 +1,6 @@
 # Moodle Labs Web Services for Moodle
 <p align="center">
-    <img src="https://img.shields.io/badge/version-2.0.0-blue">
+    <img src="https://img.shields.io/badge/version-3.0.0-blue">
     <img src="https://img.shields.io/badge/moodle-4.1-orange">
     <img src="https://img.shields.io/badge/license-MIT-green">
 </p>
