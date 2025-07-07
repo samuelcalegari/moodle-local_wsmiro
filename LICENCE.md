@@ -1,4 +1,4 @@
-Copyright (c) 2020 - 2024 Samuel Calegari
+Copyright (c) 2020 - 2025 Samuel Calegari
 
 All rights reserved. 
 

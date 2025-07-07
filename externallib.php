@@ -75,7 +75,7 @@ class local_wsmiro_external extends external_api {
 
         $params = self::validate_parameters(self::get_overview_parameters(), array('uid' => $uid));
 
-        $context = get_context_instance(CONTEXT_USER, $USER->id);
+        $context = context_user::instance($USER->id);
         self::validate_context($context);
 
         if (!has_capability('moodle/user:viewdetails', $context)) {
@@ -128,7 +128,7 @@ class local_wsmiro_external extends external_api {
 
         //Context validation
         //OPTIONAL but in most web service it should present
-        $context = get_context_instance(CONTEXT_USER, $USER->id);
+        $context = context_user::instance($USER->id);
         self::validate_context($context);
 
         //Capability checking
@@ -165,7 +165,7 @@ class local_wsmiro_external extends external_api {
 
         //Context validation
         //OPTIONAL but in most web service it should present
-        $context = get_context_instance(CONTEXT_USER, $USER->id);
+        $context = context_user::instance($USER->id);
         self::validate_context($context);
 
         //Capability checking
@@ -194,7 +194,7 @@ class local_wsmiro_external extends external_api {
 
         $params = self::validate_parameters(self::get_user_parameters(), array('uid' => $uid));
 
-        $context = get_context_instance(CONTEXT_USER, $USER->id);
+        $context = context_user::instance($USER->id);
         self::validate_context($context);
 
         if (!has_capability('moodle/user:viewdetails', $context)) {
@@ -215,7 +215,7 @@ class local_wsmiro_external extends external_api {
 
         $params = self::validate_parameters(self::get_course_students_parameters(), array('cid' => $cid));
 
-        $context = get_context_instance(CONTEXT_USER, $USER->id);
+        $context = context_user::instance($USER->id);
         self::validate_context($context);
 
         if (!has_capability('moodle/user:viewdetails', $context)) {
@@ -255,7 +255,7 @@ class local_wsmiro_external extends external_api {
 
         //Context validation
         //OPTIONAL but in most web service it should present
-        $context = get_context_instance(CONTEXT_USER, $USER->id);
+        $context = context_user::instance($USER->id);
         self::validate_context($context);
 
         //Capability checking

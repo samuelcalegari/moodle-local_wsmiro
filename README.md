@@ -1,7 +1,7 @@
 # Moodle Labs Web Services for Moodle
 <p align="center">
-    <img src="https://img.shields.io/badge/version-3.0.0-blue">
-    <img src="https://img.shields.io/badge/moodle-4.1-orange">
+    <img src="https://img.shields.io/badge/version-4.0.0-blue">
+    <img src="https://img.shields.io/badge/moodle-4.5-orange">
     <img src="https://img.shields.io/badge/license-MIT-green">
 </p>
 
@@ -21,7 +21,7 @@ Performs communication between Moodle and the Moodle Labs (Third Party Module)
 
 ## Requirement
 
-Moodle 4.1 or greater.
+Moodle 4.5 or greater.
 
 ## Licence
 

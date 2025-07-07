@@ -18,7 +18,7 @@
  * Privacy Subsystem implementation for local_wsmiro.
  *
  * @package    local_wsmiro
- * @copyright  2020 - 2024 Université de Perpignan (https://www.univ-perp.fr)
+ * @copyright  2020 - 2025 Université de Perpignan (https://www.univ-perp.fr)
  * @author     Samuel Calegari <samuel.calegari@univ-perp.fr>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
