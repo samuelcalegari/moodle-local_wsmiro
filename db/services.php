@@ -65,6 +65,13 @@ $functions = array(
         'description' => 'Return Zoom Logs from a specific user',
         'type' => 'read',
     ),
+    'local_wsmiro_get_quiz_attempts_logs' => array(
+        'classname' => 'local_wsmiro_external',
+        'methodname' => 'get_quiz_attempts_logs',
+        'classpath' => 'local/wsmiro/externallib.php',
+        'description' => 'Return Quiz Attempts Logs from a specific user',
+        'type' => 'read',
+    ),
 );
 
 // We define the services to install as pre-build services. A pre-build service is not editable by administrator.
@@ -77,6 +84,7 @@ $services = array(
             'local_wsmiro_get_user',
             'local_wsmiro_get_course_students',
             'local_wsmiro_get_zoom_logs',
+            'local_wsmiro_get_quiz_attempts_logs',
             'core_enrol_get_enrolled_users',
         ),
         'restrictedusers' => 0,

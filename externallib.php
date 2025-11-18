@@ -70,6 +70,15 @@ class local_wsmiro_external extends external_api {
         );
     }
 
+    public static function get_quiz_attempts_logs_parameters() {
+        return new external_function_parameters(
+            array(  'uid' => new external_value(PARAM_INT, 'User ID"',VALUE_REQUIRED),
+                'start' => new external_value(PARAM_INT, 'Staring Time (seconds until 1970)"',VALUE_REQUIRED),
+                'end' => new external_value(PARAM_INT, 'Staring Time (seconds until 1970)"',VALUE_REQUIRED)
+            )
+        );
+    }
+
     public static function get_overview($uid) {
         global $USER, $DB;
 
@@ -277,6 +286,38 @@ class local_wsmiro_external extends external_api {
         return $tmp;
     }
 
+    public static function get_quiz_attempts_logs($uid,$start,$end) {
+        global $USER, $DB;
+
+        //Parameter validation
+        //REQUIRED
+        $params = self::validate_parameters(self::get_quiz_attempts_logs_parameters(), array('uid' => $uid, 'start' => $start, 'end' => $end));
+
+        //Context validation
+        //OPTIONAL but in most web service it should present
+        $context = context_user::instance($USER->id);
+        self::validate_context($context);
+
+        //Capability checking
+        //OPTIONAL but in most web service it should present
+        if (!has_capability('moodle/user:viewdetails', $context)) {
+            throw new moodle_exception('cannotviewprofile');
+        }
+
+        $select = 'userid = ' . $params['uid'] . ' AND timestart >= ' . $params['start'] . ' AND timestart <= ' . $params['end'] . ' AND state= \'finished\'';
+        $result = $DB->get_records_select('quiz_attempts', $select,null, 'timestart ASC');
+        $tmp = array();
+        foreach($result as $record){
+            array_push($tmp, array(
+                    'date' => $record->join_time,
+                    'timestart' => $record->timestart,
+                    'timefinish' => $record->timefinish,)
+            );
+        }
+
+        return $tmp;
+    }
+
     public static function get_overview_returns() {
 
         return new external_single_structure(
@@ -355,6 +396,21 @@ class local_wsmiro_external extends external_api {
             array(
                 'date' => new external_value(PARAM_INT, 'Datetime'),
                 'duration' => new external_value(PARAM_INT, 'Duration')
+            )
+        );
+    }
+
+    public static function get_quiz_attempts_logs_returns() {
+
+        return new external_multiple_structure(self::quiz_attempts_log_structure());
+    }
+    public static function quiz_attempts_log_structure() {
+
+        return new external_single_structure(
+            array(
+                'date' => new external_value(PARAM_INT, 'Datetime'),
+                'timestart' => new external_value(PARAM_INT, 'Time Start'),
+                'timefinish' => new external_value(PARAM_INT, 'Time Finish')
             )
         );
     }
