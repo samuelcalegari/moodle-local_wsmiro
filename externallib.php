@@ -309,7 +309,6 @@ class local_wsmiro_external extends external_api {
         $tmp = array();
         foreach($result as $record){
             array_push($tmp, array(
-                    'date' => $record->join_time,
                     'timestart' => $record->timestart,
                     'timefinish' => $record->timefinish,)
             );
@@ -408,7 +407,6 @@ class local_wsmiro_external extends external_api {
 
         return new external_single_structure(
             array(
-                'date' => new external_value(PARAM_INT, 'Datetime'),
                 'timestart' => new external_value(PARAM_INT, 'Time Start'),
                 'timefinish' => new external_value(PARAM_INT, 'Time Finish')
             )
